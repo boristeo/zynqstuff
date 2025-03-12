@@ -37,7 +37,6 @@
 ******************************************************************************/
 
 /***************************** Include Files *********************************/
-
 #include "xparameters.h"
 #include "xgpio_l.h"
 #include "xil_printf.h"
@@ -120,3 +119,6 @@ int main(void)
 
 }
 
+void __libc_init_array() {}
+void __libc_fini_array() {}
+void exit(int) {}
