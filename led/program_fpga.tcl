@@ -19,8 +19,7 @@ ps7_init
 #set deviceTreeOffset 0x100000
 #dow -data  "system.dtb" ${deviceTreeOffset}
 
-#dow xgpio_low_level_example_1.elf
-dow blinky_working.elf
+dow xgpio_low_level_example_1.elf
 con;
 
 

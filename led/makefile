@@ -8,5 +8,8 @@ all:
   -Wl,-T \
   -Wl,lscript.ld \
   -L../../zybo_example_vitis_ws/zybo_example/zynq_fsbl/zynq_fsbl_bsp/ps7_cortexa9_0/lib \
-  -o "xgpio_low_level_example_1.elf" 
+  -I../../zybo_example_vitis_ws/zybo_example/zynq_fsbl/zynq_fsbl_bsp/ps7_cortexa9_0/include \
+  -o "xgpio_low_level_example_1.elf"  \
+  -Wl,--start-group,-lxil,-lgcc,-lc,--end-group \
+  xgpio_low_level_example.c
 
