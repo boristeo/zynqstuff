@@ -1,5 +1,8 @@
 connect -url TCP:localhost:3121
 
+targets -set -nocase -filter {name =~ "arm*#0"}
+stop
+
 # select xc7z010, load bitfile
 targets 4
 
@@ -20,7 +23,7 @@ ps7_init
 #set deviceTreeOffset 0x100000
 #dow -data  "system.dtb" ${deviceTreeOffset}
 
-dow program.elf
+dow ../build/led/led.elf
 con;
 
 

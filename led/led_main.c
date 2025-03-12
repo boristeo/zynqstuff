@@ -56,67 +56,23 @@
 #define GPIO_REG_BASEADDR	XPAR_XGPIO_0_BASEADDR
 #endif
 
-/*
- * The following constant is used to wait after an LED is turned on to make
- * sure that it is visible to the human eye.  This constant might need to be
- * tuned for faster or slower processor speeds.
- */
-#define LED_DELAY	 1000000
+#define LED_DELAY	 100000000
+#define LED_CHANNEL	0
 
-/*
- * The following constant is used to determine which channel of the GPIO is
- * used for the LED if there are 2 channels supported.
- */
-#define LED_CHANNEL	1
+int main(void) {
+	// Set the direction for all signals to be inputs except the LED output
+	*(volatile uint32_t*) (GPIO_REG_BASEADDR + LED_CHANNEL * XGPIO_CHAN_OFFSET + XGPIO_TRI_OFFSET) = ~0xf;
 
-/**************************** Type Definitions *******************************/
-
-
-/***************** Macros (Inline Functions) Definitions *********************/
-
-
-/************************** Function Prototypes ******************************/
-
-
-/************************** Variable Definitions *****************************/
-
-
-/*****************************************************************************/
-/**
-* The purpose of this function is to illustrate how to use the GPIO low level
-* driver to turn on and off an LED.
-*
-*
-* @return	Always 0
-*
-* @note
-* The main function is returning an integer to prevent compiler warnings.
-*
-******************************************************************************/
-int main(void)
-{
-	u32 Data;
-	volatile int Delay;
-
-	/*
-	 * Set the direction for all signals to be inputs except the LED output
-	 */
-	XGpio_WriteReg((GPIO_REG_BASEADDR),
-		       ((LED_CHANNEL - 1) * XGPIO_CHAN_OFFSET) +
-		       XGPIO_TRI_OFFSET, (~0xf));
-
-
-	/* Loop forever blinking the LED */
-
-	int leds = 0;
-
+	// Loop forever blinking the LED
 	for (;;) {
-		Data = XGpio_ReadReg(GPIO_REG_BASEADDR, ((LED_CHANNEL - 1) * XGPIO_CHAN_OFFSET) + XGPIO_DATA_OFFSET);
-		leds = leds << 1 | !(leds & 0x7);
-		XGpio_WriteReg((GPIO_REG_BASEADDR), ((LED_CHANNEL - 1) * XGPIO_CHAN_OFFSET) + XGPIO_DATA_OFFSET, Data & ~0xf | leds);
-		for (Delay = 0; Delay < LED_DELAY * 10; Delay++);
-	}
+		//uint32_t data = *(volatile uint32_t*) (GPIO_REG_BASEADDR + LED_CHANNEL * XGPIO_CHAN_OFFSET + XGPIO_DATA_OFFSET);
+		for (int pos = 1; pos <= 8; pos <<= 1) {
+			*(volatile uint32_t*) (GPIO_REG_BASEADDR + 0 * XGPIO_CHAN_OFFSET + XGPIO_DATA_OFFSET) = pos;
 
+			for (int delay = 0; delay < LED_DELAY; delay++)
+				asm __volatile("");
+		}
+	}
 }
 
 void __libc_init_array() {}
